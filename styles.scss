@@ -34,11 +34,13 @@ button {
     width: 50px
 }
 
-#clear {
+#clear, #backspace {
     background-color: #cf720e;
     margin: 7% 0; 
+    margin-left: 3%;
     border-radius: 5px;
 }
+
 
 .buttons {
     display: flex;
