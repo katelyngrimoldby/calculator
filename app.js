@@ -1,7 +1,8 @@
 //global vars
-let displayNum = '';
+let displayNum = '0';
 let nonDisplayNum = '';
 let currentOperator = '';
+let result
 //end of global vars
 
 //global query selectors
@@ -23,6 +24,7 @@ const subtractBTN = document.querySelector('#subtract');
 const multiplyBTN = document.querySelector('#multiply');
 const divideBTN = document.querySelector('#divide');
 const clearBTN = document.querySelector('#clear');
+const backBTN = document.querySelector('#backspace');
 //end of global query selectors
 
 //display populators
@@ -64,7 +66,7 @@ inputValue('.')
 //operator listeners
 addBTN.addEventListener('click', () => {
     if(currentOperator != '') {
-        operate(currentOperator, displayNum, nonDisplayNum);
+        operate(currentOperator, nonDisplayNum, displayNum);
         currentOperator = 'add';
     } else {
         currentOperator = 'add';
@@ -72,7 +74,7 @@ addBTN.addEventListener('click', () => {
 });
 subtractBTN.addEventListener('click', () => {
     if(currentOperator != '') {
-        operate(currentOperator, displayNum, nonDisplayNum);
+        operate(currentOperator, nonDisplayNum, displayNum);
         currentOperator = 'subtract';
     } else {
         currentOperator = 'subtract';
@@ -80,7 +82,7 @@ subtractBTN.addEventListener('click', () => {
 });
 multiplyBTN.addEventListener('click', () => {
     if(currentOperator != '') {
-        operate(currentOperator, displayNum, nonDisplayNum);
+        operate(currentOperator, nonDisplayNum, displayNum);
         currentOperator = 'multiply';
     } else {
         currentOperator = 'multiply';
@@ -88,10 +90,18 @@ multiplyBTN.addEventListener('click', () => {
 });
 divideBTN.addEventListener('click', () => {
     if(currentOperator != '') {
-        operate(currentOperator, displayNum, nonDisplayNum);
+        operate(currentOperator, nonDisplayNum, displayNum);
         currentOperator = 'divide';
     } else {
         currentOperator = 'divide';
+    }
+});
+
+calcBTN.addEventListener('click', () => {
+    if(nonDisplayNum == '') {
+        return;
+    } else {
+        operate(currentOperator, nonDisplayNum, displayNum);
     }
 });
 
@@ -108,7 +118,7 @@ function inputValue(value) {
             display.textContent = value;
             displayNum = value;
         }
-    }else if(currentOperator != '') {
+    }else if(currentOperator != '' && nonDisplayNum == '') {
         nonDisplayNum = displayNum;
         display.textContent = value;
         displayNum = value;
@@ -117,18 +127,22 @@ function inputValue(value) {
     }else {
         if([...displayNum].includes('.') && value == '.') {
             return;
-        }
-        display.insertAdjacentText('beforeend', value);
+        }else if(displayNum == '0' && value != '.') {
+            display.textContent = value;
+            displayNum = value;
+        }else {
+            display.insertAdjacentText('beforeend', value);
         displayNum += value;
+        }
     }
 }
 
 function clear() {
-    displayNum = '';
+    displayNum = '0';
     nonDisplayNum = '';
     currentOperator = '';
     result = null;
-    display.textContent = ''
+    display.textContent = displayNum
 
 }
 
@@ -153,7 +167,6 @@ function divide(a, b) {
 //end of basic functions
 
 function operate(operator, a, b) {
-    let result
     a = a*1
     b = b*1
     switch(operator) {
@@ -187,3 +200,17 @@ function operate(operator, a, b) {
 }
 
 clearBTN.addEventListener('click', clear);
+
+backBTN.addEventListener('click', () => {
+    if(displayNum.length == 0) {
+        return;
+    }else {
+        let dispArr = [...displayNum];
+        dispArr.pop();
+        displayNum = dispArr.join();
+        display.textContent = displayNum
+    }
+})
+
+
+display.textContent = displayNum
